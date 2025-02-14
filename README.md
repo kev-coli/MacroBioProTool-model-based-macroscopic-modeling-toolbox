@@ -1,4 +1,4 @@
-# Virtual Bioprocessing Toolbox (Version 1.0)
+# MacroBioProTool : Virtual Bioprocessing Toolbox (Version 1.0)
 
 ## Authors
 Mirko Pasquini (Simulations and Optimization), Kevin Colin (Modelling)
