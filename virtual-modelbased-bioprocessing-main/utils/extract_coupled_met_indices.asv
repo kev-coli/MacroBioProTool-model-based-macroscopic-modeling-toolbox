@@ -1,0 +1,9 @@
+%% Allows to extract the vector of coupled metabolites indexes 
+
+function coupled_met_indices = extract_coupled_met_indices(parameters_file, stoichiometry_file)
+    stoichiometry_labels = readtable(stoichiometry_file,'Sheet','Sheet1');
+    stoichiometry_labels = stoichiometry_labels{:,1};
+    kinetic_labels = readtable(parameters_file);
+    kinetic_labels.Properties.VariableNames(2:2:end);
+    coupled_met_indices = [];
+end

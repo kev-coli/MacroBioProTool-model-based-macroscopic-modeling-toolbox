@@ -1,0 +1,26 @@
+%% Test-unit function 3 : optimization results from model
+%
+%   The function takes as input a model and some optimization options and
+%   return the results of optimization ranked based on the score specified
+%   in the optimization options. 
+
+function [optimization_results, optimization_results_ranked] = get_ranked_optimization_results(model, optimization_options);
+    initial_conditions = optimization_options.initial_conditions;
+    index_data = optimization_options.index_data;
+    constraints = optimization_options.constraints;
+    objective_type = optimization_options.objective_type;
+    distance_evaluation_vars = optimization_options.distance_evaluation_vars;
+    sensitivity_evaluation_vars = optimization_options.sensitivity_evaluation_vars;
+    lambda_ranking = optimization_options.lambda_ranking;
+    verbose = optimization_options.verbose; 
+
+    [optimization_results, optimization_results_ranked] = model_based_optimization_with_ranking(model, ...
+                                                                    initial_conditions, ...
+                                                                    index_data, ...
+                                                                    constraints, ...
+                                                                    objective_type,...
+                                                                    distance_evaluation_vars, ...
+                                                                    sensitivity_evaluation_vars, ...
+                                                                    lambda_ranking, ...
+                                                                    verbose);
+end

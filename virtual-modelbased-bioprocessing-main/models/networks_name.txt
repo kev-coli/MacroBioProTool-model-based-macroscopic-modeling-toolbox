@@ -1,0 +1,2 @@
+Net1 - Smallest Metabolic Network
+Net2 - Genome Scale Network
