@@ -62,8 +62,8 @@ If you use this library in your research or your work, please cite it as follows
   @misc{virtual_bioprocessing,
     author = {},
     title = {MacroBioProTool : Bioprocessing Modeling, Simulation, and Optimization Library},
-    year = {2024},
-    url = {https://github.com/yourusername/bioprocessing-library},
+    year = {2025},
+    url = {https://github.com/kev-coli/MacroBioProTool-model-based-macroscopic-modeling-toolbox},
   }
 ```
 
