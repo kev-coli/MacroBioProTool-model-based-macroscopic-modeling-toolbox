@@ -321,7 +321,7 @@ function [set_of_macro_reactions_ext,set_of_macro_reactions_meas,all_reactions_f
     all_days_for_media_k = days_column(ind_days_media_k);
     for j = 1:nb_data_per_prediction_media_k
       cell_sheet7(1,kl_index) = {"Prediction"};
-      cell_sheet7(2,kl_index) = media(index_training_media(k));
+      cell_sheet7(2,kl_index) = media(index_prediction_media(k));
       cell_sheet7(3,kl_index) = all_days_for_media_k(j);
       kl_index =  kl_index + 1;
     end
@@ -340,8 +340,8 @@ end
 
 function [macroscopic_reaction,all_reactions_for_each_EFM] = compute_macro_reactions(Amac,mets_in_Amac,A,mets,EFMs)
 
-% This function computes the macrosocpic reaction involving the
-% extracellular metabolites and each reaction involved in each computed EFM
+% This function computes the macrosocpic reaction involving the extracellular metabolites and each reaction involved in each computed EFM
+% It identified the negative and positive stoichiometric coefficients in order to place them either on the left hand side (reacatnts) or the right hand side (products) of the reaction
 
 % Computation of the macroscopic reactions
 n_v = size(EFMs,1); % number of fluxes/reactions
@@ -377,7 +377,8 @@ for j = 1:size(Amac,2)
 end
 
 % Computation of the different reactions composing each EFM
-
+% For this purpose, we look at all the reactions which are active in each EFM
+% Then, as for the macroscopic rates, we write the reactions depending on the sign of the stoichiometric coefficients
 EFMs(abs(EFMs) < 1e-8) = 0;
 nb_active_reaction_per_EFMs = sum(abs(EFMs) > 0,1);
 nb_max = max(nb_active_reaction_per_EFMs);
