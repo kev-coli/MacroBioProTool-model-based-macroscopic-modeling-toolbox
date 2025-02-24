@@ -277,7 +277,7 @@ function [E1] = first_EFM_computation(Y,K,Aint,Dirrev)
    %             Dirrev*e >= 0
    %             ||e||_1 = 1
 
-   options_lin = optimoptions('linprog','Algorithm','dual-simplex-highs','Display','none');
+   options_lin = optimoptions('linprog','Algorithm','dual-simplex','Display','none');
    options_lin.Preprocess = 'none';
    f0_all = -K'*Y; % vector of the linear objective function
    fo = sparse(sum(f0_all,2)); % conversion of the objective vector into a sparse vector for accuracy improvement 
