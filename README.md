@@ -60,7 +60,7 @@ If you use this library in your research or your work, please cite it as follows
 
 ```bibtex
   @misc{virtual_bioprocessing,
-    author = {},
+    author = {Kévin Colin and Mirko Pasquini},
     title = {MacroBioProTool : Bioprocessing Modeling, Simulation, and Optimization Library},
     year = {2025},
     url = {https://github.com/kev-coli/MacroBioProTool-model-based-macroscopic-modeling-toolbox},
