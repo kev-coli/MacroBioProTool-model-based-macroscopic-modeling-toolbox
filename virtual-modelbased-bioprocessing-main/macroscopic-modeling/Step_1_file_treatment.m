@@ -119,7 +119,32 @@ function [data_qext,data_cext,data_stoich] = Step_1_file_treatment(all_directori
   
   % Treatment of possible missing data                                                                                     
   [rows_q,cols_q,~] = find(isnan(qext)); % Look for the (i,j)-entries of qext with entries equal to NaN (missing data)
-  %  Fill missing values in qext by replacing by the average of the data
+  
+  % Detect if some conditions do not measure a particular metabolite and
+  % warn the user that this condition cannot be included in the model.
+  i1 = unique(cols_q);
+  for kk = 1:length(i1)
+    col_i = i1(kk);
+    ind_rows_missing_in_col_i = rows_q(col_i == cols_q);
+    ic_rows_missing_in_col_i = ic(ind_rows_missing_in_col_i);
+    unique_ic_rows_missing_in_col_i = unique(ic_rows_missing_in_col_i);
+    for jj = 1:length(unique_ic_rows_missing_in_col_i)
+      ic_jj_rows_missing_in_col_i = unique_ic_rows_missing_in_col_i(jj);
+      nb_measurements_missing_ii_jj = sum(ic_rows_missing_in_col_i == ic_jj_rows_missing_in_col_i);
+      nb_meausrements_total_ii_jj = sum(ic == ic_jj_rows_missing_in_col_i);
+      if(nb_measurements_missing_ii_jj == nb_meausrements_total_ii_jj)
+        media_in_fault = media{ic_jj_rows_missing_in_col_i};
+        metabolite_in_fault = mets_meas_in_qext{col_i};
+        fprintf("\n")
+        fprintf("There is a problem of missing data for qext which prevents the identification !!!\n")
+        fprintf("All the measurements of condition %s for metabolite %s are missing.\n",media_in_fault,metabolite_in_fault)
+        fprintf("They cannot be replaced by an average !\n")
+        error("Please, modify the excel files by adding the missing measurements or deleting this condition.")
+      end
+    end
+  end
+
+  %  Fill missing values in qext by replacing by the average of the available data for the same condition 
   if ~isempty(rows_q) % If we have some missing data in qext (some NaN entries)
     for kk = 1:length(rows_q) % For each missing data (NaN entry)
       tempc = qext(ic == ic(rows_q(kk)),cols_q(kk)); % We take all the samples of the medium which has the kk-th missing data
@@ -160,6 +185,31 @@ function [data_qext,data_cext,data_stoich] = Step_1_file_treatment(all_directori
   
   % Treatment of possible missing data
   [rows_c,cols_c,~] = find(isnan(cext)); % Look for the (i,j)-entries of cext with entries equal to NaN (missing data)
+  
+  % Detect if some conditions do not measure a particular metabolite and
+  % warn the user that this condition cannot be included in the model.
+  i1 = unique(cols_c);
+  for kk = 1:length(i1)
+    col_i = i1(kk);
+    ind_rows_missing_in_col_i = rows_q(col_i == cols_c);
+    ic_rows_missing_in_col_i = ic(ind_rows_missing_in_col_i);
+    unique_ic_rows_missing_in_col_i = unique(ic_rows_missing_in_col_i);
+    for jj = 1:length(unique_ic_rows_missing_in_col_i)
+      ic_jj_rows_missing_in_col_i = unique_ic_rows_missing_in_col_i(jj);
+      nb_measurements_missing_ii_jj = sum(ic_rows_missing_in_col_i == ic_jj_rows_missing_in_col_i);
+      nb_meausrements_total_ii_jj = sum(ic == ic_jj_rows_missing_in_col_i);
+      if(nb_measurements_missing_ii_jj == nb_meausrements_total_ii_jj)
+        media_in_fault = media{ic_jj_rows_missing_in_col_i};
+        metabolite_in_fault = mets_meas_in_qext{col_i};
+        fprintf("\n")
+        fprintf("There is a problem of missing data for cext which prevents the identification !!!\n")
+        fprintf("All the measurements of condition %s for metabolite %s are missing.\n",media_in_fault,metabolite_in_fault)
+        fprintf("They cannot be replaced by an average !\n")
+        error("Please, modify the excel files by adding the missing measurements or deleting this condition.")
+      end
+    end
+  end
+  
   %  Fill missing values in cext by replacing by the average of the data
   if ~isempty(rows_c) % If we have some missing data in cext (some NaN entries)
     for kk = 1:length(rows_c) % For each missing data (NaN entry)

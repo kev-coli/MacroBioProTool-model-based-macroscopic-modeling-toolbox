@@ -102,7 +102,7 @@
 %               -> errors_CG_and_model.absolute_error_prediction_qext_kinetic_model : vector made up of all the absolute errors of each cell specific rate between the prediction data and the model with kinetic 
 
 function [set_of_macro_reactions_ext,set_of_macro_reactions_meas,all_reactions_for_each_EFM,errors_CG_and_model,Amac] = Step_4_treat_results(q_all_models_train,q_all_models_predict,data_qext,data_cext,plot_specification,EFMs,data_stoich,Kinetic_parameters,options_kinetic_identification,options_EFM,options_data,name_save_file)
-
+  warning('off')
   clc
   fprintf("Step 4: Computation of the relative and aboslute error for the measured cell specific rates qext...")
   pause(2) 
@@ -280,7 +280,9 @@ function [set_of_macro_reactions_ext,set_of_macro_reactions_meas,all_reactions_f
   writecell({" Reactions composing each macroscopic reaction "},name_excel_saving_file,'Sheet',3,'Range','B1:B1');  
   for k = 1:size(Aext_mac,2)
     writecell(set_of_macro_reactions_ext(k),name_excel_saving_file,'Sheet',3,'Range',strcat("A",num2str(index_in_sheet_3),":","A",num2str(index_in_sheet_3)));  
+    fclose('all');
     writecell(all_reactions_for_each_EFM(:,k),name_excel_saving_file,'Sheet',3,'Range',strcat("B",num2str(index_in_sheet_3),":","B",num2str(index_in_sheet_3-1+length(all_reactions_for_each_EFM(:,k)))));  
+    fclose('all');
     index_in_sheet_3 = index_in_sheet_3 + length(all_reactions_for_each_EFM(:,k));
   end
   
@@ -289,7 +291,9 @@ function [set_of_macro_reactions_ext,set_of_macro_reactions_meas,all_reactions_f
   writecell({" Reactions composing each macroscopic reaction "},name_excel_saving_file,'Sheet',4,'Range','B1:B1');  
   for k = 1:size(Amac,2)
     writecell(set_of_macro_reactions_meas(k),name_excel_saving_file,'Sheet',4,'Range',strcat("A",num2str(index_in_sheet_4),":","A",num2str(index_in_sheet_4)));  
+    fclose('all');
     writecell(all_reactions_for_each_EFM(:,k),name_excel_saving_file,'Sheet',4,'Range',strcat("B",num2str(index_in_sheet_4),":","B",num2str(index_in_sheet_4-1+length(all_reactions_for_each_EFM(:,k)))));  
+    fclose('all');
     index_in_sheet_4 = index_in_sheet_4 + length(all_reactions_for_each_EFM(:,k));
   end
   
@@ -334,6 +338,7 @@ function [set_of_macro_reactions_ext,set_of_macro_reactions_meas,all_reactions_f
   clc
   fprintf("The identification is finished!\n")
   fprintf("All the saved files can be found in the folder %s\n",directory_for_saving)
+  warning('on')
 end
 
 

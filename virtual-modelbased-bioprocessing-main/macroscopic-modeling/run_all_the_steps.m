@@ -62,7 +62,6 @@ options_kinetic_identification.threshold_fit_activation_or_inhibition = threshol
 q_all_models_train = cat(3,q_CG_train,q_model_train);
 q_all_models_predict = cat(3,q_CG_predict,q_model_predict);
 legend_label = [legend_label;"Model after Step 3"];
-computation_time_kinetics = toc;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%% STEP 4 : Display results %%%%%%%%%%%%%%%

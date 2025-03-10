@@ -71,7 +71,7 @@ addpath('C:\Program Files\Mosek\10.2\toolbox\r2017aom')
 % WARNING: see the example files in order to have the right format
 
 % Directory for the file contaning the qext data
-directory_file_cell_specific_rate_data_qext = '../data/K-Net data/fake_data_example_qext.xlsx';
+directory_file_cell_specific_rate_data_qext = '../data/K-Net data/fake_data_example_qext2.xlsx';
 
 % Directory for the file contaning the cext data
 directory_file_concentration_data_cext = '../data/K-Net data/fake_data_example_cext.xlsx';
