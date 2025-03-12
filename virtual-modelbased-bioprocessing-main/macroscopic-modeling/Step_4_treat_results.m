@@ -240,14 +240,17 @@ function [set_of_macro_reactions_ext,set_of_macro_reactions_meas,all_reactions_f
   writecell(Aext_mac_cell,strcat(directory_for_saving,"/supplementary_ext.xls"))
 
   % Kinetic parameters
+  mets_meas_in_cext_in_kinetics = data_cext.mets_meas_in_cext;
   mets_not_included_in_Monod_kinetics = options_kinetic_identification.mets_not_included_in_Monod_kinetics;
-  [mets_in_kinetics,locc] = ismember(mets_not_included_in_Monod_kinetics,data_cext.mets_meas_in_cext);
+  [~,locc] = ismember(mets_not_included_in_Monod_kinetics,data_cext.mets_meas_in_cext);
+  mets_meas_in_cext_in_kinetics(nonzeros(locc)) = [];
+  
   Parameters_cell = cell(2+size(Amac,2),1+2*size(Kinetic_parameters.activation_parameters,2));
   Parameters_cell(1,1) = {"wmax"}; Parameters_cell(2,1) = {"wmax"};
   Parameters_cell(3:end,1) = num2cell(Kinetic_parameters.max_reaction_rate);
   for k = 1:size(Kinetic_parameters.activation_parameters,2)
-    Parameters_cell(1,2*k) = data_cext.mets_meas_in_cext(k);
-    Parameters_cell(1,2*k+1) = data_cext.mets_meas_in_cext(k);
+    Parameters_cell(1,2*k) = mets_meas_in_cext_in_kinetics(k);
+    Parameters_cell(1,2*k+1) = mets_meas_in_cext_in_kinetics(k);
     Parameters_cell(2,2*k) = {"Activation"};
     Parameters_cell(2,2*k+1) = {"Inhibition"};
     for j = 1:size(Amac,2)
