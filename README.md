@@ -1,7 +1,7 @@
 # MacroBioProTool : Virtual Bioprocessing Toolbox (Version 1.0)
 
 ## Authors
-Mirko Pasquini (Simulations and Optimization), Kevin Colin (Modelling)
+Mirko Pasquini (Simulations and Optimization), Kevin Colin (Modelling), Markella Achilleia Zacharouli (Testing)
 
 ## Project Description
 This library provides a comprehensive set of tools for model-based approaches in continuous bioprocessing. It enables the derivation of mathematical models of cell metabolism from raw data, the simulation of steady-state experiments using such models (i.e. in a digital twin fashion), and the optimization of feed media composition based on model-based optimization techniques. The goal is to support the continuous bioprocessing community in its transition towards digitalization, by offering a complete model-based pipeline (from raw data to optimized process design) to allow for an efficient and effective bioprocess development.
