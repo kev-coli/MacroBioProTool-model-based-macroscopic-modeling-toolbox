@@ -112,7 +112,21 @@ function [set_of_macro_reactions_ext,set_of_macro_reactions_meas,all_reactions_f
   qext_predict = data_qext.qext_predict';
   nb_data_per_training_media = data_qext.nb_data_per_training_media;
   nb_data_per_prediction_media = data_qext.nb_data_per_prediction_media;
+  normalization = options_data.normalization;
+  normalization_matrix = data_qext.normalization_matrix;
 
+  if(normalization)
+    inv_normalization_matrix = inv(normalization_matrix); 
+    qext_train = inv_normalization_matrix*qext_train; 
+    q_all_models_train(:,:,1) = inv_normalization_matrix*q_all_models_train(:,:,1); 
+    q_all_models_train(:,:,2) = inv_normalization_matrix*q_all_models_train(:,:,2); 
+    if(sum(nb_data_per_prediction_media) > 0)
+      qext_predict = inv_normalization_matrix*qext_predict;
+      q_all_models_predict(:,:,1) = inv_normalization_matrix*q_all_models_predict(:,:,1); 
+      q_all_models_predict(:,:,2) = inv_normalization_matrix*q_all_models_predict(:,:,2); 
+    end
+  end
+  
   % Load the properties of the stoichiometric matrix
   mets_meas_in_qext = data_qext.mets_meas_in_qext;
   mets_ext = data_stoich.mets_ext;
@@ -185,6 +199,9 @@ function [set_of_macro_reactions_ext,set_of_macro_reactions_meas,all_reactions_f
   Aext_mac(abs(Aext_mac) < 1e-8) = 0; % Remove negligible term
   
   Ameas = data_stoich.Ameas;
+  if(normalization && ~isempty(normalization_matrix))
+    Ameas = inv_normalization_matrix*Ameas;
+  end
   Amac = Ameas*EFMs;
   Amac(abs(Amac) < 1e-8) = 0;
   

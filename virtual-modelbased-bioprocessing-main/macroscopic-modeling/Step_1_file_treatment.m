@@ -35,6 +35,7 @@
 %               -> data_qext.qext_predict : matrix of the cell specific rate PREDICTION data (averaged, smoothed and/or normalized)
 %               -> data_qext.media_column : cell vector containing the name of the media/condition to which each measurement comes from
 %               -> data_qext.days_column : cell vector containing the measurement time instants of each condition
+%               -> options_data.normalization_matrix : normalization matrix applied to the cell specific rate data
 %       - data_cext : structure containing all the information about the data cext which is used in STEPs 2, 3 and 4
 %               -> data_cext.ic : same as data_qext.ic
 %               -> data_cext.ic_training : vector used in order to identify the TRAINING condition to which each measurement corresponds to 
@@ -60,7 +61,8 @@
 %               -> data_stoich.Aext : extracellular stoichiometric matrix. The rows correspond to the EXTRACELLULAR metabolites and the columns to the reactions
 %               -> data_stoich.Aint : intracellular stoichiometric matrix. The rows correspond to the  INTRACELLULAR metabolites and the columns to the reactions
 %               -> data_stoich.is_meas : boolean vector whose dimension equals the number of extracellular metabolites. If the j-th entry of is_meas is 1 (resp. 0), then the cell specific rate of the j-th extracellular metabolite in mets_ext is measured (resp. not measured)
-%               -> data_stoich.Ameas : extracellular stoichiometric matrix with only the measured extrecallular metabolites.
+%               -> data_stoich.Ameas : extracellular stoichiometric matrix
+%               with only the measured extrecallular metabolites. If normalization is set to 1, it is equal to normalization_matrix*Ameas
 %               -> data_stoich.n_meas : number of extrecallular metabolites whose cell specific rate is measured
 %               -> data_stoich.mets_meas_in_stoich : measured metabolites which could be identified in the metabolic network
 
@@ -370,9 +372,12 @@ function [data_qext,data_cext,data_stoich] = Step_1_file_treatment(all_directori
   % Normalization of the data qext
   if(normalization)
     if(isempty(normalization_matrix))    
-      normalization_matrix = abs(diag(mean(qext,1))^-1);  
+      normalization_matrix = abs(diag(mean(qext,1))^-1); 
+      data_qext.normalization_matrix = normalization_matrix;
     end
+    data_qext.normalization_matrix = normalization_matrix;
     qext_treated = qext_treated*normalization_matrix; 
+    data_stoich.Ameas = normalization_matrix*Ameas;
   end
 
   % Smoothing or averaging (per condition) of the data qext
