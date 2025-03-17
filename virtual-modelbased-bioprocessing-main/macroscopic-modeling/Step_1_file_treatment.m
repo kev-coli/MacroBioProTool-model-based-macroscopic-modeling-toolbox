@@ -377,7 +377,6 @@ function [data_qext,data_cext,data_stoich] = Step_1_file_treatment(all_directori
     end
     data_qext.normalization_matrix = normalization_matrix;
     qext_treated = qext_treated*normalization_matrix; 
-    data_stoich.Ameas = normalization_matrix*Ameas;
   end
 
   % Smoothing or averaging (per condition) of the data qext

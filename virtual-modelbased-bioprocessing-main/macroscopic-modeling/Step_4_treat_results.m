@@ -199,7 +199,7 @@ function [set_of_macro_reactions_ext,set_of_macro_reactions_meas,all_reactions_f
   Aext_mac(abs(Aext_mac) < 1e-8) = 0; % Remove negligible term
   
   Ameas = data_stoich.Ameas;
-  if(normalization && ~isempty(normalization_matrix))
+  if(normalization)
     Ameas = inv_normalization_matrix*Ameas;
   end
   Amac = Ameas*EFMs;
