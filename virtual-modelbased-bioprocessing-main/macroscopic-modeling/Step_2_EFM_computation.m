@@ -109,6 +109,11 @@ factor_error_reduction = options_EFM.factor_error_reduction;
 % This step is used in order to detect a problem with the matbolic network.
 % If a metabolite has a fit less than 50%, then the code stops to warn the user. The user can choose to continue by ignoring the warning.
 
+if(options_data.normalization)
+  normalization_matrix = data_qext.normalization_matrix;
+  Ameas = normalization_matrix*Ameas;
+end
+
 Aint_sp = sparse(Aint); % Convert to sparse matrix in order to increase accuracy for optimization
 Ameas_sp = sparse(Ameas); % Convert to sparse matrix in order to increase accuracy for optimization
 if(use_mosek == 0)

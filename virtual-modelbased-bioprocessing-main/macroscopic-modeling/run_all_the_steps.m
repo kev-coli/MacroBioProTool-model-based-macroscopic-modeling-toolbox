@@ -58,7 +58,7 @@ options_kinetic_identification.threshold_variation_neutral_effect = threshold_va
 options_kinetic_identification.threshold_fit_activation_or_inhibition = threshold_fit_activation_or_inhibition;
 
 % Function for the Monod kinetic identification (STEP 3)
-[Kinetic_parameters,q_model_train,q_model_predict,w_model_train] = Step_3_Monod_kinetic_identification_of_macroscopic_rates(Macro_rates,data_cext,data_qext,data_stoich,EFMs,options_kinetic_identification);
+[Kinetic_parameters,q_model_train,q_model_predict,w_model_train] = Step_3_Monod_kinetic_identification_of_macroscopic_rates(Macro_rates,data_cext,data_qext,data_stoich,EFMs,options_kinetic_identification,options_data);
 q_all_models_train = cat(3,q_CG_train,q_model_train);
 q_all_models_predict = cat(3,q_CG_predict,q_model_predict);
 legend_label = [legend_label;"Model after Step 3"];

@@ -1,4 +1,4 @@
-%   [Kinetic_parameters,q_model_train,q_model_predict,w_model_train] = Step_3_Monod_kinetic_identification_of_macroscopic_rates(Macro_rates,data_cext,data_qext,data_stoich,EFMs,options_kinetic_identification,options_data,options_EFMs)  
+%   [Kinetic_parameters,q_model_train,q_model_predict,w_model_train] = Step_3_Monod_kinetic_identification_of_macroscopic_rates(Macro_rates,data_cext,data_qext,data_stoich,EFMs,options_kinetic_identification,options_datas,options_data)  
 %
 %   This code performs the kinetic identification with three substeps (Steps 3.a, 3.b and 3.c).
 %
@@ -61,12 +61,6 @@
 %                                                                                the closer to 0%, the less the chances to possibly reduce some identfiied functions into a neutral effect.
 %               -> options_kinetic_identification.threshold_fit_activation_or_inhibition : threshold for reduction of an identified modulation function into an activation or inhibition effect. It should be non-negative and kept close to 100% 
 %                                                                                          the closer to 100%, the less the chances to possibly reduce some identified functions into an activation or inhibition effect.
-%       - options_EFMs : structure containing all the options for the EFM computation :
-%               -> options_EFM.use_mosek : boolean variable. If equal to 1, the column generation algorithm will use MOSEK. IT MUST BE INSTALLED AND THE PATHWAY INDICATED IN MAIN_MODELIN.
-%               -> options_EFM.tolerance_EFM : threshold under which the modeling error for the EFM computation is judged negligible enough : all the most relevant EFMs are therefore computed
-%               -> options_EFM.computation_method_EFM : character chain. It indicates the chosen method used for the computation of the EFMs. It can also be equal to 'global', 'sequential' and 'union'.
-%               -> options_EFM.reduction_of_EFM : boolean. It specifies if the EFM should be reduced after their computation with the column generation (if equal to 1, reduction happens. If taken equal to 0, no reduction is done).
-%               -> options_EFM.factor_error_reduction : least-squares error degration allowed for EFM reduction.
 %       - options_data : a structure with three entries
 %               -> options_data.smoothing : boolean. 0 if the user does not want to smooth the data cext and qext, 1 if he does
 %               -> options_data.coeff_smoothing : span for the smoothing as used in the Matlab fonction smooth.
@@ -85,7 +79,7 @@
 %       - q_model_predict : cell specific rates computed from the kinetic model and evaluated with the prediction data
 %       - w_model_train : macroscopic rates computed from the kinetic model and evaluated with the training data
 
-function [Kinetic_parameters,q_model_train,q_model_predict,w_model_train] = Step_3_Monod_kinetic_identification_of_macroscopic_rates(Macro_rates,data_cext,data_qext,data_stoich,EFMs,options_kinetic_identification)
+function [Kinetic_parameters,q_model_train,q_model_predict,w_model_train] = Step_3_Monod_kinetic_identification_of_macroscopic_rates(Macro_rates,data_cext,data_qext,data_stoich,EFMs,options_kinetic_identification,options_data)
 
   %% Initialization and loading of the necessary variables
 
@@ -108,7 +102,11 @@ function [Kinetic_parameters,q_model_train,q_model_predict,w_model_train] = Step
   Ameas = data_stoich.Ameas; 
   threshold_variation_neutral_effect = options_kinetic_identification.threshold_variation_neutral_effect;
   threshold_fit_activation_or_inhibition = options_kinetic_identification.threshold_fit_activation_or_inhibition;
-
+  
+  if(options_data.normalization)
+    normalization_matrix = data_qext.normalization_matrix;
+    Ameas = normalization_matrix*Ameas;
+  end
   
   % Compute the macroscopic stoichiometric matrix
   Amac = Ameas*EFMs; 

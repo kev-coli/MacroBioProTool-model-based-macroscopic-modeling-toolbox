@@ -87,7 +87,7 @@ smoothing = 0; % Smoothing of the data cext and qext -> 1 : yes, 0 : no
 coeff_smoothing = 0.05; % Span for the smoothing (see smooth function on matlab for more details)
 
 % Normalization of qext 
-normalization = 0; % Normalization of the qext data -> 1 : yes, 0 : no
+normalization = 1; % Normalization of the qext data -> 1 : yes, 0 : no
 normalization_matrix = []; % Weighting square matrix used for the normalization of the qext data.
                            % It must have the same dimension as the number
                            % of extracellular metabolites present in the
@@ -117,7 +117,7 @@ factor_error_reduction = 10; % It corresponds to the PERCENTAGE of cost degradat
 %%%%%%%%% VARIABLES FOR STEP 3 - MONOD KINETICS IDENTIFICATION %%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-mets_not_included_in_Monod_kinetics = {'X'}; % Put here in char the name of the metabolites which are not included in the Monod kinetics expression
+mets_not_included_in_Monod_kinetics = {'X','S1'}; % Put here in char the name of the metabolites which are not included in the Monod kinetics expression
 
 % As aformentioned, Step 3 follows three substeps (model selection in Step 3.a, Bayesian estimation in Step 3.b and model reduction in Step 3.c)
 % Several variables need to be defined for each of these steps.

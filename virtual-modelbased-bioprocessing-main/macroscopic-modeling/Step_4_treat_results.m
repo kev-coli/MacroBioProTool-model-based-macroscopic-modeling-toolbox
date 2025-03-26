@@ -115,7 +115,7 @@ function [set_of_macro_reactions_ext,set_of_macro_reactions_meas,all_reactions_f
   normalization = options_data.normalization;
   normalization_matrix = data_qext.normalization_matrix;
 
-  if(normalization)
+  if(normalization)  
     inv_normalization_matrix = inv(normalization_matrix); 
     qext_train = inv_normalization_matrix*qext_train; 
     q_all_models_train(:,:,1) = inv_normalization_matrix*q_all_models_train(:,:,1); 
