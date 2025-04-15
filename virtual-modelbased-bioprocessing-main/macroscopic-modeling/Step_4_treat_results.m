@@ -112,10 +112,10 @@ function [set_of_macro_reactions_ext,set_of_macro_reactions_meas,all_reactions_f
   qext_predict = data_qext.qext_predict';
   nb_data_per_training_media = data_qext.nb_data_per_training_media;
   nb_data_per_prediction_media = data_qext.nb_data_per_prediction_media;
-  normalization = options_data.normalization;
-  normalization_matrix = data_qext.normalization_matrix;
-
+  
   if(normalization)  
+    normalization = options_data.normalization;
+    normalization_matrix = data_qext.normalization_matrix;
     inv_normalization_matrix = inv(normalization_matrix); 
     qext_train = inv_normalization_matrix*qext_train; 
     q_all_models_train(:,:,1) = inv_normalization_matrix*q_all_models_train(:,:,1); 
