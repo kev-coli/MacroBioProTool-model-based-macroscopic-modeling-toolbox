@@ -15,8 +15,8 @@
 %       - options_data : a structure with three entries
 %               -> options_data.smoothing : boolean. 0 if the user does not want to smooth the data cext and qext, 1 if he does
 %               -> options_data.coeff_smoothing : span for the smoothing as used in the Matlab fonction smooth.
-%               -> options_data.normalization : boolean. 0 if the user does not want to normalize the data qext, 1 if he does
-%               -> options_data.normalization_matrix : normalization matrix defined by the user. If it is empty, the code will consider a diagonal matrix with the average of the data in the diagonal elements
+%               -> options_data.average_based_normalization : boolean. 0 if the user does not want to normalize the data qext with respect to the average values of the qext data, 1 if he does
+%               -> options_data.user_defined_normalization_matrix : normalization matrix defined by the user. If it is empty, the code will consider the identity matrix
 %               -> options_data.average_data_per_condition : boolean. If it is equal to 1 (resp. 0), all the data of the same ocndition are averaged (resp. not averaged). 
 %               -> options_data.prediction_media : cell vector containing the name of the conditions used for prediction
 %
@@ -272,8 +272,8 @@ function [data_qext,data_cext,data_stoich] = Step_1_file_treatment(all_directori
   % Load the smoothing and normalization options chosen by the user
   smoothing = options_data.smoothing;
   coeff_smoothing = options_data.coeff_smoothing;
-  normalization = options_data.normalization;
-  normalization_matrix = options_data.normalization_matrix;
+  average_based_normalization = options_data.average_based_normalization;
+  user_defined_normalization_matrix = options_data.user_defined_normalization_matrix;
   average_data_per_condition = options_data.average_data_per_condition;
 
   % Split the metabolites between the extracellular ones and the intracellular ones
@@ -370,14 +370,25 @@ function [data_qext,data_cext,data_stoich] = Step_1_file_treatment(all_directori
   cext_treated = cext; % qext_treated is equal to qext with smoothing, averaged and normalization (depending of the choice of the user)
     
   % Normalization of the data qext
-  if(normalization)
-    if(isempty(normalization_matrix))    
-      normalization_matrix = abs(diag(mean(qext,1))^-1); 
-      data_qext.normalization_matrix = normalization_matrix;
+  if(isempty(user_defined_normalization_matrix))
+    normalization_matrix = eye(size(qext,2));
+  else
+    if(size(user_defined_normalization_matrix,1) == size(qext,2) && size(user_defined_normalization_matrix,2) == size(qext,2))  
+      if(min(eig(user_defined_normalization_matrix)) < 1e-10)
+        error("The matrix user_defined_normalization_matrix is singular. For numerical stability, this matrix has to be invertible. Change it to a matrix with a samller condition number.\n")
+      else
+        normalization_matrix = user_defined_normalization_matrix;  
+      end    
+    else
+      error("The variable user_defined_normalization_matrix must be a SQUARE matrix of dimensione equal to the number of measured of cell specific rates in qext (in this case: %d).\n",size(qext,2))
     end
-    data_qext.normalization_matrix = normalization_matrix;
-    qext_treated = qext_treated*normalization_matrix; 
   end
+
+  if(average_based_normalization)
+    normalization_matrix = abs(diag(mean(qext,1))^-1)*normalization_matrix; 
+  end  
+  data_qext.normalization_matrix = normalization_matrix;  
+  qext_treated = qext_treated*normalization_matrix; 
 
   % Smoothing or averaging (per condition) of the data qext
   if(smoothing == 1 && average_data_per_condition == 0)

@@ -79,22 +79,27 @@ directory_file_concentration_data_cext = '../data/K-Net data/fake_data_example_c
 % Directory for the file contaning the metabolic network
 directory_file_metabolic_network = '../data/K-Net data/fake_data_example_metabolic_network.xlsx';
 
-prediction_media = {'C6'}; %  Put here in char the conditions which are excluded from the model training stage, they will only be used for prediction
+prediction_media = {}; %  Put here in char the conditions which are excluded from the model training stage, they will only be used for prediction
 
 % Smoothing : it is possible to smooth the  data  cext and qext per conditon
 % The code uses the Matlab function smooth
 smoothing = 0; % Smoothing of the data cext and qext -> 1 : yes, 0 : no
 coeff_smoothing = 0.05; % Span for the smoothing (see smooth function on matlab for more details)
 
-% Normalization of qext 
-normalization = 1; % Normalization of the qext data -> 1 : yes, 0 : no
-normalization_matrix = []; % Weighting square matrix used for the normalization of the qext data.
-                           % It must have the same dimension as the number
-                           % of extracellular metabolites present in the
-                           % qext data file
-                           % If normalization = 1 and normalization_matrix = [], the code will automatically normalize
-                           % with the average value of the data
+% Normalization of qext and stoichiometric matrix
+% Two types of normalization can be combined
+% - average based normalization : the data qext and the measured extracellular stoichiometric matrix are normalized by multiplying them by a diagonal matrix whose entries are the inverse of the average of the absolute value of the data for each metabolite
+% - user-defined normalization_matrix : the data qext and the measured extracellular stoichiometric matrix are normalized multiplying them by the matrix defined in the variable user_defined_normalization_matrix
+% If both normalizations are used at the same time, the normalization matrix is the multiplication of both aformentioned normalization matrices.
+% Configurations:
+% - if you want both the average-based and your user-defined matrix, set average_based_normalization = 1 and specify your user_defined_normalization_matrix
+% - if you don't want the average-based normalization but you want your user-defined matrix, set average_based_normalization = 0 and specify your user_defined_normalization_matrix
+% - if you want the average-based and you don't want to add additionnal weighting, set average_based_normalization = 1 and user_defined_normalization_matrix = []
+% - if you don't want any normalization, set average_based_normalization = 0 and user_defined_normalization_matrix = []
+average_based_normalization = 0;               % Normalization with respect to the average-based normalization -> 1 : yes, 0 : no
+user_defined_normalization_matrix = [];        % Weighting square matrix used for the normalization of the qext data. It must have the same dimension as the number of extracellular metabolites present in the qext data file and it must be invertible. If user_defined_normalization_matrix = [], the code will automatically consider the identity matrix (i.e., no additionnal normalization with respect to the average based one if chosen by the user)                                   
 
+% Avereging of the data per condition (ONLY FOR STEADY-STATE DATA)
 average_data_per_condition = 0; % This computes the average of all the data of a given condition. Interesting for data at steady-state. Set it to 1 for averaging the data, 0 otherwise.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -103,7 +108,7 @@ average_data_per_condition = 0; % This computes the average of all the data of a
 
 % The code can use MOSEK optimization tool which is faster and more efficient 
 
-computation_method_EFM = 'sequential'; % 3 possible choices : 'global', 'union' or 'sequential'
+computation_method_EFM = 'global'; % 3 possible choices : 'global', 'union' or 'sequential'
 tolerance_EFM = 1e-10; % Tolerance for the computation of the EFMs
 reduction_of_EFM = 1; % 2 possible choices : 1 for reduction, 0 without reduction
 factor_error_reduction = 10; % It corresponds to the PERCENTAGE of cost degradation allowed for the EFM reduction.
@@ -117,7 +122,7 @@ factor_error_reduction = 10; % It corresponds to the PERCENTAGE of cost degradat
 %%%%%%%%% VARIABLES FOR STEP 3 - MONOD KINETICS IDENTIFICATION %%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-mets_not_included_in_Monod_kinetics = {'X','S1'}; % Put here in char the name of the metabolites which are not included in the Monod kinetics expression
+mets_not_included_in_Monod_kinetics = {'mAbext','Biomassext'}; % Put here in char the name of the metabolites which are not included in the Monod kinetics expression
 
 % As aformentioned, Step 3 follows three substeps (model selection in Step 3.a, Bayesian estimation in Step 3.b and model reduction in Step 3.c)
 % Several variables need to be defined for each of these steps.
@@ -129,11 +134,11 @@ mets_not_included_in_Monod_kinetics = {'X','S1'}; % Put here in char the name of
 % lambda is the regularization parameter (non-negative)
 % Regularization allows to set a lot of kinetic parameters to 0.
 
-regularization = 1;  % To add regularization, set regularization to 1. Otherwise set it to 0. 
+regularization = 0;  % To add regularization, set regularization to 1. Otherwise set it to 0. 
                      % WARNING : if there are more parameters in the Monod
                      % model than data, regularization is essential !
 lambda_grid = [0,0.01]; % Specify the grid for the regularization parameter 
-number_multistart_points = 3; % number of multistart points for the regularization optimization problem
+number_multistart_points = 1; % number of multistart points for the regularization optimization problem
                               % the higher, the better for global minimum
                               % computation. However the code will take
                               % more time.
@@ -146,8 +151,8 @@ number_multistart_points = 3; % number of multistart points for the regularizati
 % introduce a large bias 
 
 number_max_of_iterations_EM = 100;  % Number of maximal iterations for the Expectation Maximization algorithm
-burn_in_period_EM = 10000; % Burn-in period for the Metropolis-Hastings algorithm (it should be large enough for a proper warm-up of the algorithm)
-number_samples_per_iteration_EM = 1000; % Number of samples for the hyperparemeter updates  (the higher the better for parameter accuracy)
+burn_in_period_EM = 100; % Burn-in period for the Metropolis-Hastings algorithm (it should be large enough for a proper warm-up of the algorithm)
+number_samples_per_iteration_EM = 50; % Number of samples for the hyperparemeter updates  (the higher the better for parameter accuracy)
 number_trials_sampling_EM = 1; % Number of trials for the Metropolis Hastings algorithm  (the higher the better for parameter convergence)
 perturbation_variance_EM = 1; % perturbation of the variance hyperparameters for more exploration of the parameter space (advice : do not exceed 0.5 otherwise the convergence might not happen)
 

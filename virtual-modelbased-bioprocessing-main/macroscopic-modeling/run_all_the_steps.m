@@ -12,8 +12,8 @@ all_directories = {directory_file_cell_specific_rate_data_qext;
 
 options_data.smoothing = smoothing;
 options_data.coeff_smoothing = coeff_smoothing;
-options_data.normalization = normalization;
-options_data.normalization_matrix = normalization_matrix;
+options_data.average_based_normalization = average_based_normalization;
+options_data.user_defined_normalization_matrix = user_defined_normalization_matrix;
 options_data.average_data_per_condition = average_data_per_condition; 
 options_data.prediction_media = prediction_media;
 

@@ -103,10 +103,8 @@ function [Kinetic_parameters,q_model_train,q_model_predict,w_model_train] = Step
   threshold_variation_neutral_effect = options_kinetic_identification.threshold_variation_neutral_effect;
   threshold_fit_activation_or_inhibition = options_kinetic_identification.threshold_fit_activation_or_inhibition;
   
-  if(options_data.normalization)
-    normalization_matrix = data_qext.normalization_matrix;
-    Ameas = normalization_matrix*Ameas;
-  end
+  normalization_matrix = data_qext.normalization_matrix;
+  Ameas = normalization_matrix*Ameas;
   
   % Compute the macroscopic stoichiometric matrix
   Amac = Ameas*EFMs; 
