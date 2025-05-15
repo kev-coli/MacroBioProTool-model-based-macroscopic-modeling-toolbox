@@ -318,6 +318,8 @@ function [set_of_macro_reactions_ext,set_of_macro_reactions_meas,all_reactions_f
   writetable(Table_absolute_error,name_excel_saving_file,'Sheet',6); % we save the modeling absolute errors
   
   % we save the cell specific rate computed from the kinetic model
+  index_training_media = data_qext.index_training_media; 
+  index_prediction_media = data_qext.index_prediction_media; 
   N = data_qext.N;
   nb_data_per_training_media = data_qext.nb_data_per_training_media;
   nb_data_per_prediction_media = data_qext.nb_data_per_prediction_media;
@@ -326,8 +328,9 @@ function [set_of_macro_reactions_ext,set_of_macro_reactions_meas,all_reactions_f
   cell_sheet7 = cell(3+size(Ameas,1),N);
   kl_index = 1;
   for k = 1:length(nb_data_per_training_media)
-    nb_data_in_training_media_k = nb_data_per_training_media(k);
-    ind_days_media_k = (ic == k);
+    nb_data_in_training_media_k = nb_data_per_training_media(k);  
+    kk = index_training_media(k);
+    ind_days_media_k = (ic == kk);
     all_days_for_media_k = days_column(ind_days_media_k);
     for j = 1:nb_data_in_training_media_k
       cell_sheet7(1,kl_index) = {"Training"};
@@ -337,10 +340,11 @@ function [set_of_macro_reactions_ext,set_of_macro_reactions_meas,all_reactions_f
     end
   end
   for k = 1:length(nb_data_per_prediction_media)
-    nb_data_per_prediction_media_k = nb_data_per_prediction_media(k);
-    ind_days_media_k = (ic == k);
+    nb_data_in_prediction_media_k = nb_data_per_prediction_media(k);  
+    kk = index_prediction_media(k);
+    ind_days_media_k = (ic == kk);
     all_days_for_media_k = days_column(ind_days_media_k);
-    for j = 1:nb_data_per_prediction_media_k
+    for j = 1:nb_data_in_prediction_media_k
       cell_sheet7(1,kl_index) = {"Prediction"};
       cell_sheet7(2,kl_index) = media(index_prediction_media(k));
       cell_sheet7(3,kl_index) = all_days_for_media_k(j);
