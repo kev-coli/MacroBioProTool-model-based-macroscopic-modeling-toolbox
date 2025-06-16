@@ -356,6 +356,45 @@ function [set_of_macro_reactions_ext,set_of_macro_reactions_meas,all_reactions_f
   writecell(mets_meas_in_qext',name_excel_saving_file,'Sheet',7,'Range','A4');
   writecell(num2cell([q_all_models_train(:,:,2),q_all_models_predict(:,:,2)]),name_excel_saving_file,'Sheet',7,'Range','B4');
 
+  % we save the cell specific rate computed from the colmun generation 
+  index_training_media = data_qext.index_training_media; 
+  index_prediction_media = data_qext.index_prediction_media; 
+  N = data_qext.N;
+  nb_data_per_training_media = data_qext.nb_data_per_training_media;
+  nb_data_per_prediction_media = data_qext.nb_data_per_prediction_media;
+  ic = data_qext.ic;
+  days_column = data_qext.days_column;
+  cell_sheet8 = cell(3+size(Ameas,1),N);
+  kl_index = 1;
+  for k = 1:length(nb_data_per_training_media)
+    nb_data_in_training_media_k = nb_data_per_training_media(k);  
+    kk = index_training_media(k);
+    ind_days_media_k = (ic == kk);
+    all_days_for_media_k = days_column(ind_days_media_k);
+    for j = 1:nb_data_in_training_media_k
+      cell_sheet8(1,kl_index) = {"Training"};
+      cell_sheet8(2,kl_index) = media(index_training_media(k));
+      cell_sheet8(3,kl_index) = all_days_for_media_k(j);
+      kl_index =  kl_index + 1;
+    end
+  end
+  for k = 1:length(nb_data_per_prediction_media)
+    nb_data_in_prediction_media_k = nb_data_per_prediction_media(k);  
+    kk = index_prediction_media(k);
+    ind_days_media_k = (ic == kk);
+    all_days_for_media_k = days_column(ind_days_media_k);
+    for j = 1:nb_data_in_prediction_media_k
+      cell_sheet8(1,kl_index) = {"Prediction"};
+      cell_sheet8(2,kl_index) = media(index_prediction_media(k));
+      cell_sheet8(3,kl_index) = all_days_for_media_k(j);
+      kl_index =  kl_index + 1;
+    end
+  end
+  writecell({"Cell specific rates from kinetic model"},name_excel_saving_file,'Sheet',8,'Range','A1');
+  writecell(cell_sheet8,name_excel_saving_file,'Sheet',8,'Range','B1');
+  writecell(mets_meas_in_qext',name_excel_saving_file,'Sheet',8,'Range','A4');
+  writecell(num2cell([q_all_models_train(:,:,1),q_all_models_predict(:,:,1)]),name_excel_saving_file,'Sheet',8,'Range','B4');
+
   clc
   fprintf("The identification is finished!\n")
   fprintf("All the saved files can be found in the folder %s\n",directory_for_saving)
