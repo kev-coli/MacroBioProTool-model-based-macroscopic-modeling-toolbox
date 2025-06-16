@@ -390,7 +390,7 @@ function [set_of_macro_reactions_ext,set_of_macro_reactions_meas,all_reactions_f
       kl_index =  kl_index + 1;
     end
   end
-  writecell({"Cell specific rates from kinetic model"},name_excel_saving_file,'Sheet',8,'Range','A1');
+  writecell({"Cell specific rates from column generation"},name_excel_saving_file,'Sheet',8,'Range','A1');
   writecell(cell_sheet8,name_excel_saving_file,'Sheet',8,'Range','B1');
   writecell(mets_meas_in_qext',name_excel_saving_file,'Sheet',8,'Range','A4');
   writecell(num2cell([q_all_models_train(:,:,1),q_all_models_predict(:,:,1)]),name_excel_saving_file,'Sheet',8,'Range','B4');
