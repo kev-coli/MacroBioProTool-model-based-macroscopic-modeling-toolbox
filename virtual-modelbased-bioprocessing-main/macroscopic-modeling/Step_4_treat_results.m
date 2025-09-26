@@ -134,13 +134,13 @@ function [set_of_macro_reactions_ext,set_of_macro_reactions_meas,all_reactions_f
   mets = data_stoich.mets;
 
   % Computation of the training and prediction RELATIVE error for each cell specific rate for the column generation model (without kinetics) and the kinetics model 
-  relative_error_training_qext_CG_model = sum(((qext_train - q_all_models_train(:,:,1)).^2)./(mean(qext_train,2)),2)/sum(nb_data_per_training_media);
-  relative_error_training_qext_kinetic_model = sum(((qext_train - q_all_models_train(:,:,2)).^2)./(mean(qext_train,2)),2)/sum(nb_data_per_training_media);
+  relative_error_training_qext_CG_model = sum(((qext_train - q_all_models_train(:,:,1)).^2)./(mean(qext_train.^2,2)),2)/sum(nb_data_per_training_media);
+  relative_error_training_qext_kinetic_model = sum(((qext_train - q_all_models_train(:,:,2)).^2)./(mean(qext_train.^2,2)),2)/sum(nb_data_per_training_media);
   errors_CG_and_model.relative_error_training_qext_CG_model = relative_error_training_qext_CG_model;
   errors_CG_and_model.relative_error_training_qext_kinetic_model = relative_error_training_qext_kinetic_model;
   if(size(qext_predict,2) > 0)
-    relative_error_prediction_qext_CG_model = sum(((qext_predict - q_all_models_predict(:,:,1)).^2)./(mean(qext_predict,2)),2)/sum(nb_data_per_prediction_media);
-    relative_error_prediction_qext_kinetic_model = sum(((qext_predict - q_all_models_predict(:,:,2)).^2)./(mean(qext_predict,2)),2)/sum(nb_data_per_prediction_media);
+    relative_error_prediction_qext_CG_model = sum(((qext_predict - q_all_models_predict(:,:,1)).^2)./(mean(qext_predict.^2,2)),2)/sum(nb_data_per_prediction_media);
+    relative_error_prediction_qext_kinetic_model = sum(((qext_predict - q_all_models_predict(:,:,2)).^2)./(mean(qext_predict.^2,2)),2)/sum(nb_data_per_prediction_media);
   else
     relative_error_prediction_qext_CG_model = [];  
     relative_error_prediction_qext_kinetic_model = [];  
@@ -486,3 +486,4 @@ for j = 1:size(Amac,2)
 end
 
 end
+
